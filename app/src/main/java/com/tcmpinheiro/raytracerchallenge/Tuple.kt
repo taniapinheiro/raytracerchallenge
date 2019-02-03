@@ -58,3 +58,45 @@ fun cross(a: Tuple, b: Tuple): Tuple {
         a.z * b.x - a.x * b.z,
         a.x * b.y - a.y * b.x)
 }
+
+
+data class Color(var red: Double, var green: Double, var blue: Double) {
+
+    operator fun plus(other: Color): Color {
+        return Color(red + other.red, green + other.green, blue + other.blue)
+    }
+
+    operator fun minus(other: Color): Color {
+        return Color(red.minus(other.red), green - other.green, blue - other.blue)
+    }
+
+    operator fun times(scalar: Double): Color {
+        return Color(red * scalar, green * scalar,  blue * scalar)
+    }
+
+    operator fun times(other: Color): Color {
+        val r = red * other.red
+        val g = green * other.green
+        val b = blue * other.blue
+        return Color(r, g, b)
+    }
+
+    private val delta: Double = 0.00001
+
+    override fun equals(other: Any?): Boolean {
+        return when(other) {
+            is Color -> ((red -other.red) < delta) && ((green -other.green) < delta) && ((blue -other.blue) < delta)
+            else -> false
+        }
+    }
+
+    override fun hashCode(): Int {
+        var result = red.hashCode()
+        result = 31 * result + green.hashCode()
+        result = 31 * result + blue.hashCode()
+        result = 31 * result + delta.hashCode()
+        return result
+    }
+
+
+}
