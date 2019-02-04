@@ -24,14 +24,6 @@ class MainActivity : AppCompatActivity() {
 //        Try multiplying the projectile’s initial velocity by larger and larger
 //        numbers to see how much farther the projectile goes!
 
-        var p = Projectile(point(0.0, 1.0, 0.0), normalize(vector(0.1,0.1,0.0)))
-        val e = Environment(vector(0.0,-0.1, 0.0), vector(-0.01, 0.0, 0.0))
 
-        var ticks = 0
-        while (p.position.y > 0){
-            p = tick(e, p)
-            ticks++
-            Log.d("Projectile", "$ticks ${p.position.y}")
-        }
     }
 }
