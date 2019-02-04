@@ -1,4 +1,4 @@
-package com.tcmpinheiro.raytracerchallenge
+package com.tcmpinheiro.raytracerchallenge.features
 
 
 data class Tuple (val x:Double, val y:Double, val z:Double, val w:Double){
@@ -37,15 +37,17 @@ fun point(x:Double, y:Double, z:Double) = Tuple(x, y, z, 1.0)
 
 fun vector(x:Double, y:Double, z:Double) = Tuple(x, y, z, 0.0)
 
-fun magnitude(vector:Tuple) : Double {
+fun magnitude(vector: Tuple) : Double {
     return Math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z)
 }
 
 fun normalize(v: Tuple): Tuple {
-    return Tuple(v.x / magnitude(v),
+    return Tuple(
+        v.x / magnitude(v),
         v.y / magnitude(v),
         v.z / magnitude(v),
-        v.w / magnitude(v))
+        v.w / magnitude(v)
+    )
 }
 
 fun dot(a: Tuple, b: Tuple): Double {
@@ -54,24 +56,34 @@ fun dot(a: Tuple, b: Tuple): Double {
 }
 
 fun cross(a: Tuple, b: Tuple): Tuple {
-    return vector(a.y * b.z - a.z * b.y,
+    return vector(
+        a.y * b.z - a.z * b.y,
         a.z * b.x - a.x * b.z,
-        a.x * b.y - a.y * b.x)
+        a.x * b.y - a.y * b.x
+    )
 }
 
 
 data class Color(var red: Double, var green: Double, var blue: Double) {
 
     operator fun plus(other: Color): Color {
-        return Color(red + other.red, green + other.green, blue + other.blue)
+        return Color(
+            red + other.red,
+            green + other.green,
+            blue + other.blue
+        )
     }
 
     operator fun minus(other: Color): Color {
-        return Color(red.minus(other.red), green - other.green, blue - other.blue)
+        return Color(
+            red.minus(other.red),
+            green - other.green,
+            blue - other.blue
+        )
     }
 
     operator fun times(scalar: Double): Color {
-        return Color(red * scalar, green * scalar,  blue * scalar)
+        return Color(red * scalar, green * scalar, blue * scalar)
     }
 
     operator fun times(other: Color): Color {

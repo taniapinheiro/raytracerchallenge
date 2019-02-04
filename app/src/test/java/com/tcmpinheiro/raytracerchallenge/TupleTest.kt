@@ -1,6 +1,6 @@
 package com.tcmpinheiro.raytracerchallenge
 
-import org.junit.Assert
+import com.tcmpinheiro.raytracerchallenge.features.*
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -92,7 +92,7 @@ class TupleTest {
     fun subtractingVectorFromPoint() {
         val p = point(3.0, 2.0, 1.0)
         val v = vector(5.0, 6.0, 7.0)
-        assertEquals(point(-2.0,-4.0,-6.0), p - v)
+        assertEquals(point(-2.0, -4.0, -6.0), p - v)
     }
 
 //    Scenario: Subtracting two vectors
@@ -184,7 +184,10 @@ class TupleTest {
     @Test
     fun normalizingVector() {
         val v = vector(4.0, 0.0, 0.0)
-        assertEquals(vector(1.0, 0.0, 0.0), normalize(v))
+        assertEquals(
+            vector(1.0, 0.0, 0.0),
+            normalize(v)
+        )
     }
 
 //    Scenario: The dot product of two tuples Given a ← vector(1, 2, 3)
@@ -204,8 +207,14 @@ class TupleTest {
     fun crossProduct() {
         var a = vector(1.0, 2.0, 3.0)
         var b = vector(2.0, 3.0, 4.0)
-        assertEquals(vector(-1.0, 2.0, -1.0), cross(a, b))
-    assertEquals(vector(1.0, -2.0, 1.0), cross(b, a))
+        assertEquals(
+            vector(-1.0, 2.0, -1.0),
+            cross(a, b)
+        )
+    assertEquals(
+        vector(1.0, -2.0, 1.0),
+        cross(b, a)
+    )
     }
 
 //    Scenario: Colors are (red, green, blue) tuples Given c ← color(-0.5, 0.4, 1.7)

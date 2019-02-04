@@ -1,10 +1,16 @@
-package com.tcmpinheiro.raytracerchallenge
+package com.tcmpinheiro.raytracerchallenge.features
 
 import kotlin.math.roundToInt
 
 data class Canvas(var width:Int, var height:Int) : Iterable<Color>{
 
-    private var canvas: Array<Color> = Array(width * height) { Color(0.0, 0.0, 0.0) }
+    private var canvas: Array<Color> = Array(width * height) {
+        Color(
+            0.0,
+            0.0,
+            0.0
+        )
+    }
 
 
     fun getColor(i: Int, j: Int): Color {
@@ -85,7 +91,9 @@ fun canvas_to_ppm_pixel_data(c: Canvas): String {
 }
 
 fun canvas_to_ppm(c: Canvas): String {
-    return canvas_to_ppm_header(c) + canvas_to_ppm_pixel_data(c)
+    return canvas_to_ppm_header(c) + canvas_to_ppm_pixel_data(
+        c
+    )
 }
 
 

@@ -1,5 +1,6 @@
 package com.tcmpinheiro.raytracerchallenge
 
+import com.tcmpinheiro.raytracerchallenge.features.*
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -39,7 +40,7 @@ class CanvasTest {
 //    """
     @Test
     fun constructPPMHeader() {
-        val c = Canvas(5,3)
+        val c = Canvas(5, 3)
         val ppm = canvas_to_ppm_header(c)
         assertEquals(getPPMHeader(5, 3), ppm)
     }
@@ -58,9 +59,9 @@ class CanvasTest {
         val c1 = Color(1.5, 0.0, 0.0)
         val c2 = Color(0.0, 0.5, 0.0)
         val c3 = Color(-0.5, 0.0, 1.0)
-        write_pixel(c, 0, 0, c1)
-        write_pixel(c, 2, 1, c2)
-        write_pixel(c, 4, 2, c3)
+    write_pixel(c, 0, 0, c1)
+    write_pixel(c, 2, 1, c2)
+    write_pixel(c, 4, 2, c3)
         val ppm = canvas_to_ppm(c)
         assertEquals(getPPMHeader(5, 3) + "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 128 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 255\n",
             ppm)
