@@ -1,4 +1,4 @@
-package com.tcmpinheiro.raytracerchallenge
+package com.tcmpinheiro.raytracerchallenge.features
 
 import com.tcmpinheiro.raytracerchallenge.features.*
 import org.junit.Test
