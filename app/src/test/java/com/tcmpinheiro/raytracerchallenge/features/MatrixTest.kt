@@ -488,4 +488,59 @@ class MatrixTest{
         val c = a * b
         assertEquals(a, c * b.inverse())
     }
+
+    /**
+     * What happens when you invert the identity matrix?
+     * R: identity matrix
+     */
+    @Test
+    fun invertIdentityMatrix() {
+        val a = identityMatrix()
+        assertEquals(identityMatrix(), identityMatrix().inverse())
+    }
+
+    /**
+     * What do you get when you multiply a matrix by its inverse?
+     * R: identity matrix
+     */
+    @Test
+    fun multipleMatrixByItsInverse() {
+        val a = Matrix(4, 4,
+            doubleArrayOf(3.0, -9.0, 7.0, 3.0,
+                3.0, -8.0, 2.0, -9.0,
+                -4.0, 4.0, 4.0, 1.0,
+                -6.0, 5.0, -1.0, 1.0))
+        assertEquals(identityMatrix(), a * a.inverse())
+    }
+
+    /**
+     * Is there any difference between the inverse of the transpose
+     * of a matrix, and the transpose of the inverse?
+     * R: yes
+     */
+    @Test
+    fun inverseTransposeVSTransposeInverse() {
+        val a = Matrix(4, 4,
+            doubleArrayOf(3.0, -9.0, 7.0, 3.0,
+                3.0, -8.0, 2.0, -9.0,
+                -4.0, 4.0, 4.0, 1.0,
+                -6.0, 5.0, -1.0, 1.0))
+        assertNotEquals(a.transpose().inverse(), a.inverse().transpose())
+    }
+
+    /**
+     * Remember how multiplying the identity matrix by a tuple gives you
+     * the tuple, unchanged? Now, try changing any single element of the
+     * identity matrix to a different number, and then multiplying it by
+     * a tuple. What happens to the tuple?
+     * R: the tuple is multiplied like with any other matrix
+     */
+    @Test
+    fun multiplyIdentityMatrixByTuple() {
+        val tuple = Tuple(1.0, 2.0, 3.0, 4.0)
+        val identityMatrix = identityMatrix()
+        identityMatrix[0,1] = 5.0
+        identityMatrix[1,2] = 2.0
+        assertEquals(Tuple(1.0, 7.0, 3.0, 4.0), identityMatrix * tuple)
+    }
 }

@@ -93,7 +93,7 @@ data class Matrix(var rows: Int, var columns: Int, var array: DoubleArray) {
         return m
     }
 
-    private operator fun set(i: Int, j: Int, value: Double) {
+    operator fun set(i: Int, j: Int, value: Double) {
         array[i * rows + j] = value
     }
 
