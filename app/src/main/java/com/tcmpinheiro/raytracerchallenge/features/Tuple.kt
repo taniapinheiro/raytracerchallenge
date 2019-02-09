@@ -1,5 +1,6 @@
 package com.tcmpinheiro.raytracerchallenge.features
 
+private val delta: Double = 0.00001
 
 data class Tuple (val x:Double, val y:Double, val z:Double, val w:Double){
 
@@ -30,6 +31,27 @@ data class Tuple (val x:Double, val y:Double, val z:Double, val w:Double){
     operator fun div(scalar: Double): Tuple {
         return Tuple(x / scalar, y / scalar, z / scalar, w / scalar)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Tuple
+
+        return x - other.x < delta &&
+                y - other.y < delta &&
+                z - other.z < delta &&
+                w - other.w < delta
+    }
+
+    override fun hashCode(): Int {
+        var result = x.hashCode()
+        result = 31 * result + y.hashCode()
+        result = 31 * result + z.hashCode()
+        result = 31 * result + w.hashCode()
+        return result
+    }
+
 }
 
 
@@ -93,7 +115,7 @@ data class Color(var red: Double, var green: Double, var blue: Double) {
         return Color(r, g, b)
     }
 
-    private val delta: Double = 0.00001
+
 
     override fun equals(other: Any?): Boolean {
         return when(other) {
