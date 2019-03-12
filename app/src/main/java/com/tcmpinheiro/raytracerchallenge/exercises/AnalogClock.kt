@@ -1,4 +1,4 @@
-package com.tcmpinheiro.raytracerchallenge
+package com.tcmpinheiro.raytracerchallenge.exercises
 
 import com.tcmpinheiro.raytracerchallenge.features.*
 import java.io.File
@@ -36,3 +36,4 @@ fun paint_square(canvas: Canvas, center: Tuple, color: Color) {
         }
     }
 }
+

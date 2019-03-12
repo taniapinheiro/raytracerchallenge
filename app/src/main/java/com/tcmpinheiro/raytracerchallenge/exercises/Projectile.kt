@@ -1,8 +1,6 @@
-package com.tcmpinheiro.raytracerchallenge
+package com.tcmpinheiro.raytracerchallenge.exercises
 
 import com.tcmpinheiro.raytracerchallenge.features.*
-import java.io.File
-import kotlin.math.roundToInt
 
 
 data class Projectile(var position: Tuple, var velocity: Tuple) {
