@@ -5,14 +5,10 @@ data class Ray(val origin:Tuple, val direction:Tuple)
 
 data class Intersection(val t:Double, val target:TargetObject)
 
-data class TargetObject(var transform: Matrix = identityMatrix())
+
 
 fun position(ray: Ray, time: Double): Tuple {
     return ray.origin + ray.direction * time
-}
-
-fun sphere():TargetObject{
-    return TargetObject()
 }
 
 

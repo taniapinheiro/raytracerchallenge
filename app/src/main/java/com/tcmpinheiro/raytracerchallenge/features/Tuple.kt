@@ -2,7 +2,7 @@ package com.tcmpinheiro.raytracerchallenge.features
 
 private val delta: Double = 0.00001
 
-data class Tuple (val x:Double, val y:Double, val z:Double, val w:Double){
+data class Tuple (val x:Double, val y:Double, val z:Double, var w:Double){
 
     fun isPoint(): Boolean {
         return w == 1.0
