@@ -29,17 +29,6 @@ data class Canvas(var width:Int, var height:Int) : Iterable<Color>{
         return canvas.iterator()
     }
 
-    inline fun <T> MutableList<T>.mapInPlace(mutator: (T)->T) {
-        val iterate = this.listIterator()
-        while (iterate.hasNext()) {
-            val oldValue = iterate.next()
-            val newValue = mutator(oldValue)
-            if (newValue !== oldValue) {
-                iterate.set(newValue)
-            }
-        }
-    }
-
 }
 
 fun write_pixel(c: Canvas, i: Int, j: Int, color: Color) {
@@ -62,32 +51,36 @@ fun canvas_to_ppm_header(c: Canvas): String {
 }
 
 fun canvas_to_ppm_pixel_data(c: Canvas): String {
-    var ppm = ""
-    val arrayPixel = ArrayList<String>()
-    for (pixel in c) {
-        val rPixel = convertToPPM(pixel.red)
-        val gPixel = convertToPPM(pixel.green)
-        val bPixel = convertToPPM(pixel.blue)
-        arrayPixel.add("$rPixel")
-        arrayPixel.add("$gPixel")
-        arrayPixel.add("$bPixel")
-    }
+//    val arrayPixel = c.flatMap {pixel ->
+//        val rPixel = convertToPPM(pixel.red)
+//        val gPixel = convertToPPM(pixel.green)
+//        val bPixel = convertToPPM(pixel.blue)
+//        listOf("$rPixel","$gPixel", "$bPixel")
+//    }
+    val arrayPixel = c
+        .flatMap { listOf(it.red, it.green, it.blue) }
+        .map { convertToPPM(it) }
+        .map {it.toString()}
 
-    var line = ""
-    for (pixel in arrayPixel) {
-        if (line.length + pixel.length > 69) {
+    return chunkByPixel(arrayPixel.asSequence()).joinToString("")
+
+}
+
+fun chunkByPixel(pixels: Sequence<String>): Sequence<String> = sequence {
+    var line = String()
+    for (pixel in pixels){
+        if(line.length + pixel.length > 69){
             line = line.trimEnd()
             line += "\n"
-            ppm += line
-            line = ""
+            yield(line)
+            line = String()
         }
         line += "$pixel "
+
     }
     line = line.trimEnd()
     line += "\n"
-    ppm += line
-
-    return ppm
+    yield(line)
 }
 
 fun canvas_to_ppm(c: Canvas): String {
