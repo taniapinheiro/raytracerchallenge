@@ -10,11 +10,11 @@ fun sphere():TargetObject{
     return TargetObject()
 }
 
-data class Material(var color: Color = Color(1.0, 1.0, 1.0),
-                    var ambient: Double = 0.1,
-                    var diffuse: Double = 0.9,
-                    var specular: Double = 0.9,
-                    var shininess: Double = 200.0)
+data class Material(val color: Color = Color(1.0, 1.0, 1.0),
+                    val ambient: Double = 0.1,
+                    val diffuse: Double = 0.9,
+                    val specular: Double = 0.9,
+                    val shininess: Double = 200.0)
 
 fun normal_at(shape:TargetObject, worldPoint:Tuple):Tuple {
     val objectPoint = shape.transform.inverse() * worldPoint
@@ -45,19 +45,25 @@ fun lighting(material: Material, light: PointLight, point: Tuple, eyeV: Tuple, n
     var specular = Color(0.0, 0.0, 0.0)
     val lightDotNormal = dot(lightv, normalV)
 
-    // compute the diffuse contribution
-    diffuse = effectiveColor * material.diffuse * lightDotNormal
+    if (lightDotNormal < 0) {
+        diffuse = Color(0.0, 0.0, 0.0)
+        specular = Color(0.0, 0.0, 0.0)
+    } else {
+        // compute the diffuse contribution
+        diffuse = effectiveColor * material.diffuse * lightDotNormal
 
-    // reflect_dot_eye represents the cosine of the angle between the
-    // reflection vector and the eye vector. A negative number means the
-    // light reflects away from the eye.
-    val reflectV = reflect(-lightv, normalV)
-    val reflectDotEye = dot(reflectV, eyeV)
-
-    //compute the specular contribution
-    val factor =  Math.pow(reflectDotEye, material.shininess)
-    specular = light.intensity * material.specular * factor
-
-    // Add the three contributions together to get the final shading
+        // reflect_dot_eye represents the cosine of the angle between the
+        // reflection vector and the eye vector. A negative number means the
+        // light reflects away from the eye.
+        val reflectV = reflect(-lightv, normalV)
+        val reflectDotEye = dot(reflectV, eyeV)
+        if (reflectDotEye <= 0){
+            specular = Color(0.0, 0.0, 0.0)
+        } else {
+            //compute the specular contribution
+            val factor =  Math.pow(reflectDotEye, material.shininess)
+            specular = light.intensity * material.specular * factor
+        }
+    }
     return ambientLight + diffuse + specular
 }

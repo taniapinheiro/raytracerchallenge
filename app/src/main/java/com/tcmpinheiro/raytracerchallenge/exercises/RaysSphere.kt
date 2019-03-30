@@ -24,8 +24,17 @@ fun main() {
     val half = wallSize /2
 
     val canvas = Canvas(canvasPixels, canvasPixels)
-    val color = Color(1.0, 0.0, 0.0)
     val shape = sphere()
+
+    //sphere.material ← material()
+    // sphere.material.color ← color(1, 0.2, 1)
+    shape.material = Material(Color(1.0, 0.2, 1.0))
+
+    //add light
+    val lightPosition = point(-10.0, 10.0, -20.0)
+    val lightColor = Color(1.0, 1.0, 1.0)
+    val light = PointLight(lightPosition, lightColor)
+
 
     //for each row of pixels in the canvas
     for (y in 0 until canvasPixels - 1) {
@@ -43,7 +52,19 @@ fun main() {
 
             val r = Ray(rayOrigin, normalize(position - rayOrigin))
 
+
+
             hit(intersect(shape, r))?.let {
+
+                //point ← position(ray, hit.t)
+                val point = position(r, it.t)
+                //normal ← normal_at(hit.object, point)
+                val normal = normal_at(it.target, point)
+                //eye ← -ray.direction
+                val eye = -r.direction
+
+                //color ← lighting(hit.object.material, light, point, eye, normal)
+                val color = lighting(it.target.material, light, point, eye, normal)
                 write_pixel(canvas, x, y, color)
             }
         }

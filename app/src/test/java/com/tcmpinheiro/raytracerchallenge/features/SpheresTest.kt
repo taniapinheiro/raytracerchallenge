@@ -196,9 +196,9 @@ class SpheresTest {
     fun testSphereAssignMaterial() {
         val s = sphere()
         val m = Material()
-        m.ambient = 1.0
-        s.material = m
-        assertEquals(m ,s.material)
+        val mm = m.copy(ambient = 1.0)
+        s.material = mm
+        assertEquals(mm ,s.material)
     }
 
     val m = Material()

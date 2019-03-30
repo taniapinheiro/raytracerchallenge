@@ -85,7 +85,6 @@ fun cross(a: Tuple, b: Tuple): Tuple {
     )
 }
 
-
 data class Color(var red: Double, var green: Double, var blue: Double) {
 
     operator fun plus(other: Color): Color {
