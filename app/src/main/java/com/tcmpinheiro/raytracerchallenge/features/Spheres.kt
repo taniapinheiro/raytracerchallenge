@@ -11,7 +11,7 @@ fun sphere():TargetObject{
 }
 
 data class Material(val color: Color = Color(1.0, 1.0, 1.0),
-                    val ambient: Double = 0.1,
+                    var ambient: Double = 0.1,
                     val diffuse: Double = 0.9,
                     val specular: Double = 0.9,
                     val shininess: Double = 200.0)
@@ -41,8 +41,8 @@ fun lighting(material: Material, light: PointLight, point: Tuple, eyeV: Tuple, n
     // light_dot_normal represents the cosine of the angle between the
     // light vector and the normal vector. A negative number means the
     // light is on the other side of the surface.
-    var diffuse = Color(0.0, 0.0, 0.0)
-    var specular = Color(0.0, 0.0, 0.0)
+    var diffuse: Color
+    var specular: Color
     val lightDotNormal = dot(lightv, normalV)
 
     if (lightDotNormal < 0) {

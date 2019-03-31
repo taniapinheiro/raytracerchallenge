@@ -53,3 +53,17 @@ fun shearing(xy: Double, xz:Double, yx:Double, yz:Double, zx:Double, zy:Double )
     matrix[1, 2] = yz
     return matrix
 }
+
+fun viewTransform(from:Tuple, to:Tuple, up:Tuple): Matrix{
+    val forward = normalize(to - from)
+    val left = cross(forward, normalize(up))
+    val trueUp = cross(left, forward)
+    val orientation = Matrix(
+        4,
+        4,
+        doubleArrayOf(left.x, left.y, left.z, 0.0,
+            trueUp.x, trueUp.y, trueUp.z, 0.0,
+            -forward.x, -forward.y, -forward.z, 0.0,
+            0.0, 0.0, 0.0, 1.0))
+    return orientation * translation(-from.x, -from.y, -from.z)
+}
