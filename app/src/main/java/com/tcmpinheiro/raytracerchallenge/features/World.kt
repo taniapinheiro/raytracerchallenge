@@ -20,11 +20,8 @@ fun defaultWorld(pointLight: PointLight = PointLight(point(-10.0, 10.0, -10.0), 
 
 
 fun intersect_world(world: World, ray: Ray) : List<Intersection>{
-    val intersections = arrayListOf<Intersection>()
-    for (shape in world.objects){
-        intersections.addAll(intersect(shape,ray))
-    }
-    return intersections.sortedBy { it.t }
+    return world.objects.flatMap { shape -> intersect(shape, ray) }
+        .sortedBy { it.t}
 }
 
 class Computations{
