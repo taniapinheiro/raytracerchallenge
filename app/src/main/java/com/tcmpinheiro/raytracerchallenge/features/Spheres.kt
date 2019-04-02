@@ -45,7 +45,7 @@ fun lighting(material: Material, light: PointLight, point: Tuple, eyeV: Tuple, n
     var specular: Color
     val lightDotNormal = dot(lightv, normalV)
 
-    if (lightDotNormal < 0) {
+    if (lightDotNormal < 0 || inShadow) {
         diffuse = Color(0.0, 0.0, 0.0)
         specular = Color(0.0, 0.0, 0.0)
     } else {
