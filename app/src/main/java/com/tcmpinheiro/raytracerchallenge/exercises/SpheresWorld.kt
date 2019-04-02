@@ -38,9 +38,8 @@ fun main() {
     left.transform = translation(-1.5, 0.33, -0.75) * scaling(0.33, 0.33, 0.33)
     left.material = Material(color = Color(1.0, 0.8, 0.1), diffuse = 0.7, specular = 0.3)
 
-    val world = World()
-    world.light = PointLight(point(-10.0, 10.0, -10.0), Color(1.0, 1.0, 1.0))
-    world.objects = setOf(floor, left_wall, right_wall, middle, left, right)
+    val world = World(PointLight(point(-10.0, 10.0, -10.0), Color(1.0, 1.0, 1.0)))
+    world.objects.addAll(setOf(floor, left_wall, right_wall, middle, left, right))
 
     val camera = Camera(500, 500, PI/3)
     camera.transform = viewTransform(point(0.0, 1.5, -5.0), point(0.0, 1.0, 0.0),

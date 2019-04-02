@@ -14,9 +14,9 @@ class WorldTest {
      */
     @Test
     fun testNewWorld() {
-        val w = World()
+        val w = World(PointLight())
         assertEquals(0, w.objects.size)
-        assertEquals(null, w.light)
+        assertEquals(PointLight(), w.light)
     }
 
     /**
@@ -42,7 +42,7 @@ class WorldTest {
                 specular = 0.2)
         val s2 = sphere()
         s2.transform = scaling(0.5, 0.5, 0.5)
-        val w = defaultWorld()
+        val w = defaultWorld(light)
         assertEquals(light, w.light)
         assertTrue(w.objects.contains(s1))
         assertTrue(w.objects.contains(s2))
@@ -172,8 +172,7 @@ class WorldTest {
      */
     @Test
     fun testIntesectionInside() {
-        val w = defaultWorld()
-        w.light = PointLight(point(0.0, 0.25, 0.0), Color(1.0, 1.0, 1.0))
+        val w = defaultWorld(PointLight(point(0.0, 0.25, 0.0), Color(1.0, 1.0, 1.0)))
         val r = Ray(point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0))
         val shape = w.objects.last()
         val i = Intersection(0.5, shape)
@@ -306,12 +305,12 @@ class WorldTest {
      */
     @Test
     fun testIntersectionInShadow() {
-        val w = World()
-        w.light = PointLight(point(0.0, 0.0, -10.0), Color(1.0, 1.0, 1.0))
+        val w = World(PointLight(point(0.0, 0.0, -10.0), Color(1.0, 1.0, 1.0)))
         val s1 = sphere()
         val s2 = sphere()
         s2.transform = translation(0.0, 0.0, 10.0)
-        w.objects = setOf(s1, s2)
+        w.objects.add(s1)
+        w.objects.add(s2)
         val ray = Ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0))
         val i = Intersection(4.0, s2)
         val computations = prepare_computations(i, ray)

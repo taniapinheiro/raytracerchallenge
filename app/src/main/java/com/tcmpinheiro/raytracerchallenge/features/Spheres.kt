@@ -1,6 +1,6 @@
 package com.tcmpinheiro.raytracerchallenge.features
 
-data class PointLight(val position: Tuple, val intensity:Color)
+data class PointLight(val position: Tuple = point(0.0, 0.0, 0.0), val intensity:Color = Color(1.0, 1.0, 1.0))
 
 data class TargetObject(var transform: Matrix = identityMatrix(),
                         var material: Material = Material()

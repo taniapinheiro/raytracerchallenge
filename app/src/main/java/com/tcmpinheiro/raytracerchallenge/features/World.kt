@@ -1,13 +1,10 @@
 package com.tcmpinheiro.raytracerchallenge.features
 
-class World{
-    var light:PointLight? = null
-    var objects: Set<TargetObject> = hashSetOf()
-}
+data class World(val light: PointLight, val objects: MutableSet<TargetObject> = mutableSetOf())
 
-fun defaultWorld() : World{
-    val world = World()
-    val light = PointLight(point(-10.0, 10.0, -10.0), Color(1.0, 1.0, 1.0))
+
+fun defaultWorld(pointLight: PointLight = PointLight(point(-10.0, 10.0, -10.0), Color(1.0, 1.0, 1.0))): World{
+    val world = World(pointLight)
     val s1 = sphere()
     s1.material = Material()
         .copy(color = Color(0.8, 1.0, 0.6),
@@ -16,8 +13,8 @@ fun defaultWorld() : World{
     val s2 = sphere()
     s2.transform = scaling(0.5, 0.5, 0.5)
 
-    world.light = light
-    world.objects = setOf(s1, s2)
+    world.objects.add(s1)
+    world.objects.add(s2)
     return world
 }
 
@@ -65,7 +62,7 @@ fun shadeHit(world: World, comps: Computations): Color {
     val shadowed = is_shadowed(world, comps.overPoint)
     return lighting(
         comps.shape.material,
-        world.light!!,
+        world.light,
         comps.point,
         comps.eyev,
         comps.normalv,
@@ -84,7 +81,7 @@ fun colorAt(world: World, ray: Ray): Color {
 }
 
 fun is_shadowed(world: World, point:Tuple): Boolean {
-    val v = world.light!!.position - point
+    val v = world.light.position - point
     val distance = magnitude(v)
     val ray = Ray(point, normalize(v))
     val intersections = intersect_world(world, ray)
