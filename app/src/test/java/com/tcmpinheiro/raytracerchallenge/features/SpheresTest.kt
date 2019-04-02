@@ -289,4 +289,23 @@ class SpheresTest {
         val result = lighting(m, light, position, eyeV, normalV)
         assertEquals(Color(0.1, 0.1, 0.1), result)
     }
+
+    /**
+     * Scenario: Lighting with the surface in shadow
+     * Given eyev ← vector(0, 0, -1)
+     * And normalv ← vector(0, 0, -1)
+     * And light ← point_light(point(0, 0, -10), color(1, 1, 1))
+     * And in_shadow ← true
+     * When result ← lighting(m, light, position, eyev, normalv, in_shadow)
+     * Then result = color(0.1, 0.1, 0.1)
+     */
+    @Test
+    fun testLightingWithShadowSurface() {
+        val eyeV = vector(0.0, 0.0, -1.0)
+        val normalV = vector(0.0, 0.0, -1.0)
+        val light = PointLight(point(0.0, 0.0, -10.0), Color(1.0, 1.0, 1.0))
+        val inShadow = true
+        val result = lighting(m, light, position, eyeV, normalV, inShadow)
+        assertEquals(Color(0.1, 0.1, 0.1), result)
+    }
 }

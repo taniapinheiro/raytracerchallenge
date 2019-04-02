@@ -37,8 +37,11 @@ class Computations{
     lateinit var eyev: Tuple
     lateinit var normalv: Tuple
     var inside:Boolean = false
+    lateinit var overPoint: Tuple
 
 }
+
+const val EPSILON = 0.00001
 
 fun prepare_computations(intersection: Intersection, ray: Ray): Computations {
     //instantiate a data structure for storing some precomputed values
@@ -50,6 +53,7 @@ fun prepare_computations(intersection: Intersection, ray: Ray): Computations {
     comps.point = position(ray, comps.t)
     comps.eyev = -ray.direction
     comps.normalv = normal_at(comps.shape, comps.point)
+    comps.overPoint = comps.point + comps.normalv * EPSILON
     if (dot(comps.normalv, comps.eyev) < 0) {
         comps.inside = true
         comps.normalv = -comps.normalv
@@ -58,12 +62,14 @@ fun prepare_computations(intersection: Intersection, ray: Ray): Computations {
 }
 
 fun shadeHit(world: World, comps: Computations): Color {
+    val shadowed = is_shadowed(world, comps.overPoint)
     return lighting(
         comps.shape.material,
         world.light!!,
         comps.point,
         comps.eyev,
-        comps.normalv)
+        comps.normalv,
+        shadowed)
 }
 
 fun colorAt(world: World, ray: Ray): Color {
@@ -75,4 +81,13 @@ fun colorAt(world: World, ray: Ray): Color {
         val comps = prepare_computations(hit, ray)
         shadeHit(world, comps)
     }
+}
+
+fun is_shadowed(world: World, point:Tuple): Boolean {
+    val v = world.light!!.position - point
+    val distance = magnitude(v)
+    val ray = Ray(point, normalize(v))
+    val intersections = intersect_world(world, ray)
+    val hit = hit(intersections)
+    return hit != null && hit.t < distance
 }

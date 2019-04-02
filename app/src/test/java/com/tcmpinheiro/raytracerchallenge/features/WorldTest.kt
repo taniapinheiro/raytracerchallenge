@@ -236,5 +236,107 @@ class WorldTest {
 
     }
 
+    /**
+     * Scenario: There is no shadow when nothing is collinear with point and light
+     * Given w ← default_world()
+     * And p ← point(0, 10, 0)
+     * Then is_shadowed(w, p) is false
+     */
+    @Test
+    fun testNoShadow() {
+        val w = defaultWorld()
+        val p = point(0.0, 10.0, 0.0)
+        assertEquals(false, is_shadowed(w, p))
+    }
 
+    /**
+     * Scenario: The shadow when an object is between the point and the light
+     * Given w ← default_world()
+     * And p ← point(10, -10, 10)
+     * Then is_shadowed(w, p) is true
+     */
+    @Test
+    fun testShadowBetweenPointAndLight() {
+        val w = defaultWorld()
+        val p = point(10.0, -10.0, 10.0)
+        assertEquals(true, is_shadowed(w, p))
+    }
+
+    /**
+     * Scenario: There is no shadow when an object is behind the light
+     * Given w ← default_world()
+     * And p ← point(-20, 20, -20)
+     * Then is_shadowed(w, p) is false
+     */
+    @Test
+    fun testNoShadowWhenObjectIsBehindLight() {
+        val w = defaultWorld()
+        val p = point(-20.0, 20.0, -20.0)
+        assertEquals(false, is_shadowed(w, p))
+    }
+
+    /**
+     * Scenario: There is no shadow when an object is behind the point
+     * Given w ← default_world()
+     * And p ← point(-2, 2, -2)
+     * Then is_shadowed(w, p) is false
+     */
+    @Test
+    fun testNowShadowWhenObjectIsBehindPoint() {
+        val w = defaultWorld()
+        val p = point(-2.0, 2.0, -2.0)
+        assertEquals(false, is_shadowed(w, p))
+    }
+
+    /**
+     * Scenario: shade_hit() is given an intersection in shadow
+     * Given w ← world()
+     * And w.light ← point_light(point(0, 0, -10), color(1, 1, 1))
+     * And s1 ← sphere()
+     * And s1 is added to w
+     * And s2 ← sphere() with:
+     * | transform
+     * | translation(0, 0, 10) |
+     * And s2 is added to w
+     * And r ← ray(point(0, 0, 5), vector(0, 0, 1))
+     * And i ← intersection(4, s2)
+     * When comps ← prepare_computations(i, r)
+     * And c ← shade_hit(w, comps)
+     * Then c = color(0.1, 0.1, 0.1)
+     */
+    @Test
+    fun testIntersectionInShadow() {
+        val w = World()
+        w.light = PointLight(point(0.0, 0.0, -10.0), Color(1.0, 1.0, 1.0))
+        val s1 = sphere()
+        val s2 = sphere()
+        s2.transform = translation(0.0, 0.0, 10.0)
+        w.objects = setOf(s1, s2)
+        val ray = Ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0))
+        val i = Intersection(4.0, s2)
+        val computations = prepare_computations(i, ray)
+        val c = shadeHit(w, computations)
+        assertEquals(Color(0.1, 0.1, 0.1), c)
+    }
+
+    /**
+     * Scenario: The hit should offset the point
+     * Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
+     * And shape ← sphere() with:
+     * | transform | translation(0, 0, 1) |
+     * And i ← intersection(5, shape)
+     * When comps ← prepare_computations(i, r)
+     * Then comps.over_point.z < -EPSILON/2
+     * And comps.point.z > comps.over_point.z
+     */
+    @Test
+    fun testHitOffsetsPoint() {
+        val r = Ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0))
+        val shape = sphere()
+        shape.transform = translation(0.0, 0.0, 1.0)
+        val i = Intersection(5.0, shape)
+        val computations = prepare_computations(i, r)
+        assert( computations.overPoint.z < -EPSILON/2)
+        assert(computations.point.z > computations.overPoint.z)
+    }
 }

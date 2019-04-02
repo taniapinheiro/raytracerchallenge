@@ -28,7 +28,7 @@ fun reflect(vector: Tuple, normal: Tuple): Tuple {
     return  vector - normal * 2.0 * dot(vector, normal)
 }
 
-fun lighting(material: Material, light: PointLight, point: Tuple, eyeV: Tuple, normalV: Tuple): Color{
+fun lighting(material: Material, light: PointLight, point: Tuple, eyeV: Tuple, normalV: Tuple, inShadow:Boolean = false): Color{
     //combine the surface color with the light's color/intensity
     val effectiveColor = material.color * light.intensity
 
