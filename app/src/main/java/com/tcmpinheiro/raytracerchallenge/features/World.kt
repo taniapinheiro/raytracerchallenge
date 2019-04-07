@@ -1,6 +1,6 @@
 package com.tcmpinheiro.raytracerchallenge.features
 
-data class World(val light: PointLight, val objects: MutableSet<TargetObject> = mutableSetOf())
+data class World(val light: PointLight, val objects: MutableList<TargetObject> = mutableListOf())
 
 
 fun defaultWorld(pointLight: PointLight = PointLight(point(-10.0, 10.0, -10.0), Color(1.0, 1.0, 1.0))): World{
