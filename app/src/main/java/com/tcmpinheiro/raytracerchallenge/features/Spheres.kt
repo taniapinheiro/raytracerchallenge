@@ -2,21 +2,81 @@ package com.tcmpinheiro.raytracerchallenge.features
 
 data class PointLight(val position: Tuple = point(0.0, 0.0, 0.0), val intensity:Color = Color(1.0, 1.0, 1.0))
 
-data class TargetObject(var transform: Matrix = identityMatrix(),
-                        var material: Material = Material()
-)
+abstract class Shape(var transform: Matrix = identityMatrix(),
+                 var material: Material = Material()) {
 
-fun sphere():TargetObject{
-    return TargetObject()
+    abstract fun local_intersect(ray: Ray): List<Intersection>
+
+    abstract fun local_normal_at(point: Tuple):Tuple
+
+    fun intersect(ray:Ray):List<Intersection> {
+        val local_ray = transform(ray, transform.inverse())
+        return local_intersect(local_ray)
+    }
+
+    fun normal_at(point:Tuple): Tuple {
+        val local_point = transform.inverse() * point
+        val local_normal = local_normal_at(local_point)
+        val world_normal = transform.inverse().transpose() * local_normal
+        world_normal.w = 0.0
+        return normalize(world_normal)
+    }
+
+
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Shape
+
+        return transform == other.transform &&
+                material == other.material
+    }
+
+    override fun hashCode(): Int {
+        var result = transform.hashCode()
+        result = 31 * result + material.hashCode()
+        return result
+    }
+}
+
+class Sphere(transform: Matrix = identityMatrix(),
+             material: Material = Material()) : Shape(transform, material) {
+
+    override fun local_normal_at(point: Tuple): Tuple {
+        return vector(point.x, point.y, point.z)
+    }
+
+    lateinit var localRay:Ray
+
+    override fun local_intersect(ray: Ray): List<Intersection> {
+        //the vector from the shape's center, to the ray origin
+        //remember: the shape is centered at the world origin sphere_to_ray ← ray.origin - point(0, 0, 0)
+        localRay = ray
+        val sphere_to_ray = ray.origin - point(0.0, 0.0, 0.0)
+        val a = dot(ray.direction, ray.direction)
+        val b = 2 * dot(ray.direction, sphere_to_ray)
+        val c = dot(sphere_to_ray, sphere_to_ray) - 1
+        val discriminant = b * b - 4 * a * c
+        return if (discriminant >= 0) {
+            val i1 = Intersection((-b - Math.sqrt(discriminant)) / (2 * a), this)
+            val i2 = Intersection(( -b + Math.sqrt(discriminant)) / (2 * a), this)
+            intersections(i1, i2)
+        } else {
+            emptyList()
+        }
+    }
 }
 
 data class Material(val color: Color = Color(1.0, 1.0, 1.0),
                     var ambient: Double = 0.1,
                     val diffuse: Double = 0.9,
                     val specular: Double = 0.9,
-                    val shininess: Double = 200.0)
+                    val shininess: Double = 200.0
+)
 
-fun normal_at(shape:TargetObject, worldPoint:Tuple):Tuple {
+fun normal_at(shape:Shape, worldPoint:Tuple):Tuple {
     val objectPoint = shape.transform.inverse() * worldPoint
     val objectNormal = objectPoint - point(0.0, 0.0, 0.0)
     val worldNormal = shape.transform.inverse().transpose() * objectNormal

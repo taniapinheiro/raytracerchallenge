@@ -35,17 +35,17 @@ class WorldTest {
     @Test
     fun testDefaultWorld() {
         val light = PointLight(point(-10.0, 10.0, -10.0), Color(1.0, 1.0, 1.0))
-        val s1 = sphere()
+        val s1 = Sphere()
         s1.material = Material()
             .copy(color = Color(0.8, 1.0, 0.6),
                 diffuse = 0.7,
                 specular = 0.2)
-        val s2 = sphere()
+        val s2 = Sphere()
         s2.transform = scaling(0.5, 0.5, 0.5)
         val w = defaultWorld(light)
         assertEquals(light, w.light)
-        assertTrue(w.objects.contains(s1))
-        assertTrue(w.objects.contains(s2))
+        assertEquals(s1, w.objects.first())
+        assertEquals(s2, w.objects.last())
     }
 
     /**
@@ -87,7 +87,7 @@ class WorldTest {
     @Test
     fun testPreComputeIntersection() {
         val r = Ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0))
-        val shape = sphere()
+        val shape = Sphere()
         val i = Intersection(4.0, shape)
         val comps = prepare_computations(i, r)
         assertEquals(i.t, comps.t)
@@ -108,7 +108,7 @@ class WorldTest {
     @Test
     fun testIntersectionOutside() {
         val r = Ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0))
-        val shape = sphere()
+        val shape = Sphere()
         val i = Intersection(4.0, shape)
         val comps = prepare_computations(i, r)
         assertEquals(false, comps.inside)
@@ -129,7 +129,7 @@ class WorldTest {
     @Test
     fun testIntersectionInside() {
         val r = Ray(point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0))
-        val shape = sphere()
+        val shape = Sphere()
         val i = Intersection(1.0, shape)
         val comps = prepare_computations(i, r)
         assertEquals(point(0.0, 0.0, 1.0), comps.point)
@@ -176,7 +176,7 @@ class WorldTest {
     fun testIntesectionInside() {
         val w = defaultWorld(PointLight(point(0.0, 0.25, 0.0), Color(1.0, 1.0, 1.0)))
         val r = Ray(point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0))
-        val shape = w.objects.last()
+        val shape = w.objects[1]
         val i = Intersection(0.5, shape)
         val comps = prepare_computations(i, r)
         val c = shadeHit(w, comps)
@@ -308,8 +308,8 @@ class WorldTest {
     @Test
     fun testIntersectionInShadow() {
         val w = World(PointLight(point(0.0, 0.0, -10.0), Color(1.0, 1.0, 1.0)))
-        val s1 = sphere()
-        val s2 = sphere()
+        val s1 = Sphere()
+        val s2 = Sphere()
         s2.transform = translation(0.0, 0.0, 10.0)
         w.objects.add(s1)
         w.objects.add(s2)
@@ -333,7 +333,7 @@ class WorldTest {
     @Test
     fun testHitOffsetsPoint() {
         val r = Ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0))
-        val shape = sphere()
+        val shape = Sphere()
         shape.transform = translation(0.0, 0.0, 1.0)
         val i = Intersection(5.0, shape)
         val computations = prepare_computations(i, r)

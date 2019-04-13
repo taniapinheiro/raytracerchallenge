@@ -53,8 +53,8 @@ class RaysTest {
     @Test
     fun testSphereIntersection() {
         val r = Ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0))
-        val s = sphere()
-        val xs = intersect(s, r)
+        val s = Sphere()
+        val xs = s.intersect(r)
         assertEquals(2, xs.count())
         assertEquals(4.0, xs[0].t, delta)
         assertEquals(6.0, xs[1].t, delta)
@@ -71,8 +71,8 @@ class RaysTest {
     @Test
     fun testSphereIntersectionTangent() {
         val r = Ray(point(0.0, 1.0, -5.0), vector(0.0, 0.0, 1.0))
-        val s = sphere()
-        val xs = intersect(s, r)
+        val s = Sphere()
+        val xs = s.intersect(r)
         assertEquals(2, xs.count())
         assertEquals(5.0, xs[0].t, delta)
         assertEquals(5.0, xs[1].t, delta)
@@ -88,8 +88,8 @@ class RaysTest {
     @Test
     fun testSphereIntersectionMiss() {
         val r = Ray(point(0.0, 2.0, -5.0), vector(0.0, 0.0, 1.0))
-        val s = sphere()
-        val xs = intersect(s, r)
+        val s = Sphere()
+        val xs = s.intersect(r)
         assertEquals(0, xs.count())
     }
 
@@ -105,8 +105,8 @@ class RaysTest {
     @Test
     fun testRayOriginatesInsideSphere() {
         val r = Ray(point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0))
-        val s = sphere()
-        val xs = intersect(s, r)
+        val s = Sphere()
+        val xs = s.intersect(r)
         assertEquals(2, xs.count())
         assertEquals(-1.0, xs[0].t, delta)
         assertEquals(1.0, xs[1].t, delta)
@@ -124,8 +124,8 @@ class RaysTest {
     @Test
     fun testRayBehindSphere() {
         val r = Ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0))
-        val s = sphere()
-        val xs = intersect(s, r)
+        val s = Sphere()
+        val xs = s.intersect(r)
         assertEquals(2, xs.count())
         assertEquals(-6.0, xs[0].t, delta)
         assertEquals(-4.0, xs[1].t, delta)
@@ -140,7 +140,7 @@ class RaysTest {
      */
     @Test
     fun testCreateIntersection() {
-        val s = sphere()
+        val s = Sphere()
         val i = Intersection(3.5, s)
         assertEquals(3.5, i.t, delta)
         assertEquals(s, i.target)
@@ -157,7 +157,7 @@ class RaysTest {
      */
     @Test
     fun testAggregateIntersections() {
-        val s = sphere()
+        val s = Sphere()
         val i1 = Intersection(1.0, s)
         val i2 = Intersection(2.0, s)
         val xs = intersections(i1, i2)
@@ -178,8 +178,8 @@ class RaysTest {
     @Test
     fun testIntersectSetsObjectOnIntersection() {
         val r = Ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0))
-        val s = sphere()
-        val xs = intersect(s, r)
+        val s = Sphere()
+        val xs = s.intersect(r)
         assertEquals(2, xs.count())
         assertEquals(s, xs[0].target)
         assertEquals(s, xs[1].target)
@@ -196,7 +196,7 @@ class RaysTest {
      */
     @Test
     fun testIntersectionsAllPositive() {
-        val s = sphere()
+        val s = Sphere()
         val i1 = Intersection(1.0, s)
         val i2 = Intersection(2.0, s)
         val xs = intersections(i1, i2)
@@ -214,7 +214,7 @@ class RaysTest {
      */
     @Test
     fun testIntersectionsSomeNegative() {
-        val s = sphere()
+        val s = Sphere()
         val i1 = Intersection(-1.0, s)
         val i2 = Intersection(1.0, s)
         val xs = intersections(i2, i1)
@@ -233,7 +233,7 @@ class RaysTest {
      */
     @Test
     fun testIntersectionsAllNegative() {
-        val s = sphere()
+        val s = Sphere()
         val i1 = Intersection(-2.0, s)
         val i2 = Intersection(-1.0, s)
         val xs = intersections(i2, i1)
@@ -253,7 +253,7 @@ class RaysTest {
      */
     @Test
     fun testHitIsLowestNonNegativeIntersection() {
-        val s = sphere()
+        val s = Sphere()
         val i1 = Intersection(5.0, s)
         val i2 = Intersection(7.0, s)
         val i3 = Intersection(-3.0, s)
@@ -298,13 +298,13 @@ class RaysTest {
     }
 
     /**
-     * Scenario: A sphere's default transformation
+     * Scenario: The default transformation
      * Given s ← sphere()
      * Then s.transform = identity_matrix
      */
     @Test
     fun testSphereDefaultTransformation() {
-        val s = sphere()
+        val s = Sphere()
         assertEquals(identityMatrix(), s.transform)
     }
 
@@ -317,45 +317,45 @@ class RaysTest {
      */
     @Test
     fun testChangeSphereTransformation() {
-        val s = sphere()
         val t = translation(2.0, 3.0, 4.0)
-        s.transform = t
+        val s = Sphere(t)
         assertEquals(t, s.transform)
     }
 
     /**
-     * Scenario: Intersecting a scaled sphere with a ray
+     * Scenario: Intersecting a scaled shape with a ray
      * Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
      * And s ← sphere()
      * When set_transform(s, scaling(2, 2, 2))
      * And xs ← intersect(s, r)
-     * Then xs.count = 2
-     * And xs[0].t = 3 And xs[1].t = 7
+     * Then s.saved_ray.origin = point(0, 0, -2.5)
+     * And s.saved_ray.direction = vector(0, 0, 0.5)
      */
     @Test
     fun testIntersectScaledSphere() {
         val r = Ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0))
-        val s = sphere()
+        val s = Sphere()
         s.transform = scaling(2.0, 2.0, 2.0)
-        val xs = intersect(s, r)
-        assertEquals(2, xs.count())
-        assertEquals(3.0, xs[0].t, delta)
-        assertEquals(7.0, xs[1].t, delta)
+        val xs = s.intersect(r)
+        assertEquals(point(0.0, 0.0, -2.5), s.localRay.origin)
+        assertEquals(vector(0.0, 0.0, 0.5), s.localRay.direction)
     }
     /**
-     * Scenario: Intersecting a translated sphere with a ray
+     * Scenario: Intersecting a translated shape with a ray
      * Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
-     * And s ← sphere()
+     * And s ← Sphere()
      * When set_transform(s, translation(5, 0, 0))
-     * And xs ← intersect(s, r) Then xs.count = 0
+     * And xs ← intersect(s, r)
+     * Then s.saved_ray.origin = point(-5, 0, -5)
+     * And s.saved_ray.direction = vector(0, 0, 1)
      */
     @Test
     fun testIntersectTranslatedSphere() {
         val r = Ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0))
-        val s = sphere()
-        s.transform = translation(5.0, 0.0, 0.0)
-        val xs = intersect(s, r)
-        assertEquals(0, xs.count())
+        val s = Sphere(translation(5.0, 0.0, 0.0))
+        val xs = s.intersect(r)
+        assertEquals(point(-5.0, 0.0, -5.0), s.localRay.origin)
+        assertEquals(vector(0.0, 0.0, 1.0), s.localRay.direction)
     }
 
 

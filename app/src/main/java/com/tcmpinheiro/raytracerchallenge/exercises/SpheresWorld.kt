@@ -6,35 +6,35 @@ import kotlin.math.PI
 
 fun main() {
 
-    val floor = sphere()
+    val floor = Sphere()
     floor.transform = scaling(10.0, 0.01, 10.0)
     floor.material = Material(color = Color(1.0, 0.9, 0.9),
             specular = 0.0)
 
-    val left_wall = sphere()
+    val left_wall = Sphere()
     left_wall.transform = translation(0.0, 0.0, 5.0) *
                     rotationY(-PI/4) *
                     rotationX(PI/2) *
                     scaling(10.0, 0.01, 10.0)
     left_wall.material = floor.material
 
-    val right_wall = sphere()
+    val right_wall = Sphere()
     right_wall.transform = translation(0.0, 0.0, 5.0) *
                     rotationY(PI/4) *
                     rotationX(PI/2) *
                     scaling(10.0, 0.01, 10.0)
     right_wall.material = floor.material
 
-    val middle = sphere()
+    val middle = Sphere()
     middle.transform = translation(-0.5, 1.0, 0.5)
     middle.material = Material(color = Color(0.1, 1.0, 0.5), diffuse = 0.7,  specular = 0.3)
 
-    val right = sphere()
+    val right = Sphere()
     right.transform = translation(1.5, 0.5, -0.5) * scaling(0.5, 0.5, 0.5)
     right.material = Material(color = Color(0.5, 1.0, 0.1), diffuse = 0.7, specular = 0.3)
 
 
-    val left = sphere()
+    val left = Sphere()
     left.transform = translation(-1.5, 0.33, -0.75) * scaling(0.33, 0.33, 0.33)
     left.material = Material(color = Color(1.0, 0.8, 0.1), diffuse = 0.7, specular = 0.3)
 

@@ -24,7 +24,7 @@ fun main() {
     val half = wallSize /2
 
     val canvas = Canvas(canvasPixels, canvasPixels)
-    val shape = sphere()
+    val shape = Sphere()
 
     //sphere.material ← material()
     // sphere.material.color ← color(1, 0.2, 1)
@@ -54,7 +54,7 @@ fun main() {
 
 
 
-            hit(intersect(shape, r))?.let {
+            hit(shape.intersect(r))?.let {
 
                 //point ← position(ray, hit.t)
                 val point = position(r, it.t)

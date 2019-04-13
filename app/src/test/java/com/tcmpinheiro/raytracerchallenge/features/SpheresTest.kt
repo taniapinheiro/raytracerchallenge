@@ -15,7 +15,7 @@ class SpheresTest {
      */
     @Test
     fun testSphereNormalX() {
-        val s = sphere()
+        val s = Sphere()
         val n = normal_at(s, point(1.0, 0.0, 0.0))
         assertEquals(vector(1.0, 0.0, 0.0), n)
     }
@@ -28,7 +28,7 @@ class SpheresTest {
      */
     @Test
     fun testSphereNormalY() {
-        val s = sphere()
+        val s = Sphere()
         val n = normal_at(s, point(0.0, 1.0, 0.0))
         assertEquals(vector(0.0, 1.0, 0.0), n)
     }
@@ -41,7 +41,7 @@ class SpheresTest {
      */
     @Test
     fun testSphereNormalZ() {
-        val s = sphere()
+        val s = Sphere()
         val n = normal_at(s, point(0.0, 0.0, 1.0))
         assertEquals(vector(0.0, 0.0, 1.0), n)
     }
@@ -54,7 +54,7 @@ class SpheresTest {
      */
     @Test
     fun testSphereNormal() {
-        val s = sphere()
+        val s = Sphere()
         val i = Math.sqrt(3.0)/3
         val n = normal_at(s, point(i, i, i))
         assertEquals(vector(i, i, i), n)
@@ -68,24 +68,23 @@ class SpheresTest {
      */
     @Test
     fun testNormalIsNormalizedVector() {
-        val s = sphere()
+        val s = Sphere()
         val i = Math.sqrt(3.0)/3
         val n = normal_at(s, point(i, i, i))
         assertEquals(normalize(n), n)
     }
 
     /**
-     * Scenario: Computing the normal on a translated sphere
-     * Given s ← sphere()
+     * Scenario: Computing the normal on a translated shape
+     * Given s ← Sphere()
      * And set_transform(s, translation(0, 1, 0))
      * When n ← normal_at(s, point(0, 1.70711, -0.70711))
      * Then n = vector(0, 0.70711, -0.70711)
      */
     @Test
     fun testNormalTranslatedSphere() {
-        val s = sphere()
-        s.transform = translation(0.0, 1.0, 0.0)
-        val n = normal_at(s, point(0.0, 1.70711, -0.70711))
+        val s = Sphere(translation(0.0, 1.0, 0.0))
+        val n = s.normal_at(point(0.0, 1.70711, -0.70711))
         assertEquals(vector(0.0, 0.70711, -0.70711), n)
     }
 
@@ -99,9 +98,9 @@ class SpheresTest {
      */
     @Test
     fun testNormalTransformedSphere() {
-        val s = sphere()
-        s.transform = scaling(1.0, 0.5, 1.0) * rotationZ((Math.PI/5))
-        val n = normal_at(s, point(0.0, Math.sqrt(2.0)/2, -Math.sqrt(2.0)/2))
+        val t  = scaling(1.0, 0.5, 1.0) * rotationZ((Math.PI/5))
+        val s = Sphere(t)
+        val n = s.normal_at(point(0.0, Math.sqrt(2.0)/2, -Math.sqrt(2.0)/2))
         assertEquals(vector(0.0, 0.97014, -0.25254), n)
     }
 
@@ -172,16 +171,15 @@ class SpheresTest {
     }
 
     /**
-     * Scenario: A sphere has a default material
-     * Given s ← sphere()
+     * Scenario: The default material
+     * Given s ← Shape()
      * When m ← s.material
      * Then m = material()
      */
     @Test
-    fun testSphereDefaultMaterial() {
-        val s = sphere()
-        val m = s.material
-        assertEquals(Material(), m)
+    fun testShapeDefaultMaterial() {
+        val s = Sphere()
+        assertEquals(Material(), s.material)
     }
 
     /**
@@ -194,7 +192,7 @@ class SpheresTest {
      */
     @Test
     fun testSphereAssignMaterial() {
-        val s = sphere()
+        val s = Sphere()
         val m = Material()
         val mm = m.copy(ambient = 1.0)
         s.material = mm
