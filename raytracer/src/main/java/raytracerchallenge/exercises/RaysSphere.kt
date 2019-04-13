@@ -59,7 +59,7 @@ fun main() {
                 //point ← position(ray, hit.t)
                 val point = position(r, it.t)
                 //normal ← normal_at(hit.object, point)
-                val normal = normal_at(it.target, point)
+                val normal = it.target.normal_at(point)
                 //eye ← -ray.direction
                 val eye = -r.direction
 

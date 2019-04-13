@@ -16,7 +16,7 @@ class SpheresTest {
     @Test
     fun testSphereNormalX() {
         val s = Sphere()
-        val n = normal_at(s, point(1.0, 0.0, 0.0))
+        val n = s.normal_at(point(1.0, 0.0, 0.0))
         assertEquals(vector(1.0, 0.0, 0.0), n)
     }
 
@@ -29,7 +29,7 @@ class SpheresTest {
     @Test
     fun testSphereNormalY() {
         val s = Sphere()
-        val n = normal_at(s, point(0.0, 1.0, 0.0))
+        val n = s.normal_at(point(0.0, 1.0, 0.0))
         assertEquals(vector(0.0, 1.0, 0.0), n)
     }
 
@@ -42,7 +42,7 @@ class SpheresTest {
     @Test
     fun testSphereNormalZ() {
         val s = Sphere()
-        val n = normal_at(s, point(0.0, 0.0, 1.0))
+        val n = s.normal_at(point(0.0, 0.0, 1.0))
         assertEquals(vector(0.0, 0.0, 1.0), n)
     }
 
@@ -56,7 +56,7 @@ class SpheresTest {
     fun testSphereNormal() {
         val s = Sphere()
         val i = Math.sqrt(3.0)/3
-        val n = normal_at(s, point(i, i, i))
+        val n = s.normal_at(point(i, i, i))
         assertEquals(vector(i, i, i), n)
     }
 
@@ -70,7 +70,7 @@ class SpheresTest {
     fun testNormalIsNormalizedVector() {
         val s = Sphere()
         val i = Math.sqrt(3.0)/3
-        val n = normal_at(s, point(i, i, i))
+        val n = s.normal_at(point(i, i, i))
         assertEquals(normalize(n), n)
     }
 

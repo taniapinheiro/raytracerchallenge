@@ -45,7 +45,7 @@ class Sphere(transform: Matrix = identityMatrix(),
              material: Material = Material()) : Shape(transform, material) {
 
     override fun local_normal_at(point: Tuple): Tuple {
-        return vector(point.x, point.y, point.z)
+        return vector(point.x, point.y, point.z) - point(0.0, 0.0, 0.0)
     }
 
     lateinit var localRay:Ray
@@ -76,13 +76,6 @@ data class Material(val color: Color = Color(1.0, 1.0, 1.0),
                     val shininess: Double = 200.0
 )
 
-fun normal_at(shape:Shape, worldPoint:Tuple):Tuple {
-    val objectPoint = shape.transform.inverse() * worldPoint
-    val objectNormal = objectPoint - point(0.0, 0.0, 0.0)
-    val worldNormal = shape.transform.inverse().transpose() * objectNormal
-    worldNormal.w = 0.0
-    return normalize(worldNormal)
-}
 
 fun reflect(vector: Tuple, normal: Tuple): Tuple {
     return  vector - normal * 2.0 * dot(vector, normal)

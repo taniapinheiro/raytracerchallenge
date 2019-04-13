@@ -5,7 +5,7 @@ import java.io.File
 import kotlin.math.roundToInt
 
 
-fun main() {
+fun analockClockMain() {
 
     val color = Color(1.0, 0.8, 0.6)
     val canvas = Canvas(200, 200)

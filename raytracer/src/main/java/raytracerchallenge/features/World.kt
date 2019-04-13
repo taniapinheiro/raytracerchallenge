@@ -46,7 +46,7 @@ fun prepare_computations(intersection: Intersection, ray: Ray): Computations {
     //precompute some useful values
     comps.point = position(ray, comps.t)
     comps.eyev = -ray.direction
-    comps.normalv = normal_at(comps.shape, comps.point)
+    comps.normalv = comps.shape.normal_at(comps.point)
     comps.overPoint = comps.point + comps.normalv * EPSILON
     if (dot(comps.normalv, comps.eyev) < 0) {
         comps.inside = true
