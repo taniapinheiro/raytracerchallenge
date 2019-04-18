@@ -38,7 +38,7 @@ class Computations{
 const val EPSILON = 0.00001
 
 fun prepare_computations(intersection: Intersection, ray: Ray): Computations {
-    //instantiate a data structure for storing some precomputed values
+    //instantiate color data structure for storing some precomputed values
     val comps = Computations()
     //copy the intersection's properties, for convenience
     comps.t = intersection.t

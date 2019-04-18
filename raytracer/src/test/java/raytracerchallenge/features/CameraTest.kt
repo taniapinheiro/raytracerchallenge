@@ -9,7 +9,7 @@ class CameraTest {
     val delta = 0.00001
 
     /**
-     * Scenario: Constructing a camera
+     * Scenario: Constructing color camera
      * Given hsize ← 160
      * And vsize ← 120
      * And field_of_view ← π/2

@@ -6,8 +6,8 @@ import org.junit.Test
 
 class PatternsTest {
 
-    val black = Color(0.0, 0.0, 0.0)
-    val white = Color(1.0, 1.0, 1.0)
+    val black = SolidPattern(Color(0.0, 0.0, 0.0))
+    val white = SolidPattern(Color(1.0, 1.0, 1.0))
 
     /**
      * Scenario: Creating a stripe pattern
@@ -32,9 +32,9 @@ class PatternsTest {
     @Test
     fun testPatternConstantInY() {
         val pattern = StripePattern(white, black)
-        assertEquals(white, pattern.pattern_at(point(0.0, 0.0, 0.0)))
-        assertEquals(white, pattern.pattern_at(point(0.0, 1.0, 0.0)))
-        assertEquals(white, pattern.pattern_at(point(0.0, 2.0, 0.0)))
+        assertEquals(white.color, pattern.pattern_at(point(0.0, 0.0, 0.0)))
+        assertEquals(white.color, pattern.pattern_at(point(0.0, 1.0, 0.0)))
+        assertEquals(white.color, pattern.pattern_at(point(0.0, 2.0, 0.0)))
     }
 
     /**
@@ -47,9 +47,9 @@ class PatternsTest {
     @Test
     fun testStripePatternConstantInZ() {
         val pattern = StripePattern(white, black)
-        assertEquals(white, pattern.pattern_at(point(0.0, 0.0, 0.0)))
-        assertEquals(white, pattern.pattern_at(point(0.0, 0.0, 1.0)))
-        assertEquals(white, pattern.pattern_at(point(0.0, 0.0, 2.0)))
+        assertEquals(white.color, pattern.pattern_at(point(0.0, 0.0, 0.0)))
+        assertEquals(white.color, pattern.pattern_at(point(0.0, 0.0, 1.0)))
+        assertEquals(white.color, pattern.pattern_at(point(0.0, 0.0, 2.0)))
     }
 
     /**
@@ -65,12 +65,12 @@ class PatternsTest {
     @Test
     fun testStripePatternAlternatesInX() {
         val pattern = StripePattern(white, black)
-        assertEquals(white, pattern.pattern_at(point(0.0, 0.0, 0.0)))
-        assertEquals(white, pattern.pattern_at(point(0.9, 0.0, 0.0)))
-        assertEquals(black, pattern.pattern_at(point(1.0, 0.0, 0.0)))
-        assertEquals(black, pattern.pattern_at(point(-0.1, 0.0, 0.0)))
-        assertEquals(black, pattern.pattern_at(point(-1.0, 0.0, 0.0)))
-        assertEquals(white, pattern.pattern_at(point(-1.1, 0.0, 0.0)))
+        assertEquals(white.color, pattern.pattern_at(point(0.0, 0.0, 0.0)))
+        assertEquals(white.color, pattern.pattern_at(point(0.9, 0.0, 0.0)))
+        assertEquals(black.color, pattern.pattern_at(point(1.0, 0.0, 0.0)))
+        assertEquals(black.color, pattern.pattern_at(point(-0.1, 0.0, 0.0)))
+        assertEquals(black.color, pattern.pattern_at(point(-1.0, 0.0, 0.0)))
+        assertEquals(white.color, pattern.pattern_at(point(-1.1, 0.0, 0.0)))
     }
 
     /**
@@ -98,8 +98,8 @@ class PatternsTest {
         val light = PointLight(point(0.0, 0.0, -10.0), Color(1.0, 1.0, 1.0))
         val c1 = lighting(m, Sphere(), light, point(0.9, 0.0, 0.0), eyev, normalv, false)
         val c2 = lighting(m, Sphere(), light, point(1.1, 0.0, 0.0), eyev, normalv, false)
-        assertEquals(white, c1)
-        assertEquals(black, c2)
+        assertEquals(white.color, c1)
+        assertEquals(black.color, c2)
     }
 
     /**
@@ -177,5 +177,82 @@ class PatternsTest {
         assertEquals(translation(1.0, 2.0, 3.0), p.transform)
     }
 
+    /**
+     * Scenario: A gradient linearly interpolates between colors
+     * Given pattern ← gradient_pattern(white, black)
+     * Then pattern_at(pattern, point(0, 0, 0)) = white
+     * And pattern_at(pattern, point(0.25, 0, 0)) = color(0.75, 0.75, 0.75)
+     * And pattern_at(pattern, point(0.5, 0, 0)) = color(0.5, 0.5, 0.5)
+     * And pattern_at(pattern, point(0.75, 0, 0)) = color(0.25, 0.25, 0.25)
+     */
+    @Test
+    fun testGradientPattern() {
+        val p = GradientPattern(white, black)
+        assertEquals(white.color, p.pattern_at(point(0.0, 0.0, 0.0)))
+        assertEquals(Color(0.75, 0.75, 0.75), p.pattern_at(point(0.25, 0.0, 0.0)))
+        assertEquals(Color(0.5, 0.5, 0.5), p.pattern_at(point(0.5, 0.0, 0.0)))
+        assertEquals(Color(0.25, 0.25, 0.25), p.pattern_at(point(0.75, 0.0, 0.0)))
+    }
 
+    /**
+     * Scenario: A ring should extend in both x and z
+     * Given pattern ← ring_pattern(white, black)
+     * Then pattern_at(pattern, point(0, 0, 0)) = white
+     * And pattern_at(pattern, point(1, 0, 0)) = black
+     * And pattern_at(pattern, point(0, 0, 1)) = black
+     * # 0.708 = just slightly more than √2/2
+     * And pattern_at(pattern, point(0.708, 0, 0.708)) = black
+     */
+    @Test
+    fun testRingPattern() {
+        val p = RingPattern(white, black)
+        assertEquals(white.color, p.pattern_at(point(0.0, 0.0, 0.0)))
+        assertEquals(black.color, p.pattern_at(point(1.0, 0.0, 0.0)))
+        assertEquals(black.color, p.pattern_at(point(0.0, 0.0, 1.0)))
+        assertEquals(black.color, p.pattern_at(point(0.708, 0.0, 0.708)))
+    }
+
+    /**
+     * Scenario: Checkers should repeat in x
+     * Given pattern ← checkers_pattern(white, black)
+     * Then pattern_at(pattern, point(0, 0, 0)) = white
+     * And pattern_at(pattern, point(0.99, 0, 0)) = white
+     * And pattern_at(pattern, point(1.01, 0, 0)) = black
+     */
+    @Test
+    fun testCheckersPatternShouldRepeatInX() {
+        val p = CheckersPattern(white, black)
+        assertEquals(white.color, p.pattern_at(point(0.0, 0.0, 0.0)))
+        assertEquals(white.color, p.pattern_at(point(0.99, 0.0, 0.0)))
+        assertEquals(black.color, p.pattern_at(point(1.01, 0.0, 0.0)))
+    }
+    /**
+     * Scenario: Checkers should repeat in y
+     * Given pattern ← checkers_pattern(white, black)
+     * Then pattern_at(pattern, point(0, 0, 0)) = white
+     * And pattern_at(pattern, point(0, 0.99, 0)) = white
+     * And pattern_at(pattern, point(0, 1.01, 0)) = black
+     */
+    @Test
+    fun testCheckersPatternShouldRepeatInY() {
+        val p = CheckersPattern(white, black)
+        assertEquals(white.color, p.pattern_at(point(0.0, 0.0, 0.0)))
+        assertEquals(white.color, p.pattern_at(point(0.0, 0.99, 0.0)))
+        assertEquals(black.color, p.pattern_at(point(0.0, 1.01, 0.0)))
+    }
+
+    /**
+     * Scenario: Checkers should repeat in z
+     * Given pattern ← checkers_pattern(white, black)
+     * Then pattern_at(pattern, point(0, 0, 0)) = white
+     * And pattern_at(pattern, point(0, 0, 0.99)) = white
+     * And pattern_at(pattern, point(0, 0, 1.01)) = black
+     */
+    @Test
+    fun testCheckersPatternShouldRepeatInZ() {
+        val p = CheckersPattern(white, black)
+        assertEquals(white.color, p.pattern_at(point(0.0, 0.0, 0.0)))
+        assertEquals(white.color, p.pattern_at(point(0.0, 0.0, 0.99)))
+        assertEquals(black.color, p.pattern_at(point(0.0, 0.0, 1.01)))
+    }
 }
