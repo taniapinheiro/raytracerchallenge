@@ -59,6 +59,7 @@ fun shadeHit(world: World, comps: Computations): Color {
     val shadowed = is_shadowed(world, comps.overPoint)
     return lighting(
         comps.shape.material,
+        comps.shape,
         world.light,
         comps.point,
         comps.eyev,

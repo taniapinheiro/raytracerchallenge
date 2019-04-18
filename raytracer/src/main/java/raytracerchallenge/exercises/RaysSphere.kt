@@ -64,7 +64,7 @@ fun main() {
                 val eye = -r.direction
 
                 //color ← lighting(hit.object.material, light, point, eye, normal)
-                val color = lighting(it.target.material, light, point, eye, normal)
+                val color = lighting(it.target.material, shape, light, point, eye, normal)
                 write_pixel(canvas, x, y, color)
             }
         }

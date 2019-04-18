@@ -215,7 +215,7 @@ class SpheresTest {
         val eyeV = vector(0.0, 0.0, -1.0)
         val normalV = vector(0.0, 0.0, -1.0)
         val light = PointLight(point(0.0, 0.0, -10.0), Color(1.0, 1.0, 1.0))
-        val result = lighting(m, light, position, eyeV, normalV)
+        val result = lighting(m, Sphere(),light, position, eyeV, normalV)
         assertEquals(Color(1.9, 1.9, 1.9), result)
     }
 
@@ -232,7 +232,7 @@ class SpheresTest {
         val eyeV = vector(0.0, Math.sqrt(2.0)/2, -Math.sqrt(2.0)/2)
         val normalV = vector(0.0, 0.0, -1.0)
         val light = PointLight(point(0.0, 0.0, -10.0), Color(1.0, 1.0, 1.0))
-        val result = lighting(m, light, position, eyeV, normalV)
+        val result = lighting(m,  Sphere(), light, position, eyeV, normalV)
         assertEquals(Color(1.0, 1.0, 1.0), result)
     }
 
@@ -249,7 +249,7 @@ class SpheresTest {
         val eyeV = vector(0.0, 0.0, -1.0)
         val normalV = vector(0.0, 0.0, -1.0)
         val light = PointLight(point(0.0, 10.0, -10.0), Color(1.0, 1.0, 1.0))
-        val result = lighting(m, light, position, eyeV, normalV)
+        val result = lighting(m,  Sphere(), light, position, eyeV, normalV)
         assertEquals(Color(0.7364, 0.7364, 0.7364), result)
     }
 
@@ -266,7 +266,7 @@ class SpheresTest {
         val eyeV = vector(0.0, -Math.sqrt(2.0)/2, -Math.sqrt(2.0)/2)
         val normalV = vector(0.0, 0.0, -1.0)
         val light = PointLight(point(0.0, 10.0, -10.0), Color(1.0, 1.0, 1.0))
-        val result = lighting(m, light, position, eyeV, normalV)
+        val result = lighting(m, Sphere(),  light, position, eyeV, normalV)
         assertEquals(Color(1.6364, 1.6364, 1.6364), result)
     }
 
@@ -284,7 +284,7 @@ class SpheresTest {
         val eyeV = vector(0.0, 0.0, -1.0)
         val normalV = vector(0.0, 0.0, -1.0)
         val light = PointLight(point(0.0, 0.0, -10.0), Color(1.0, 1.0, 1.0))
-        val result = lighting(m, light, position, eyeV, normalV)
+        val result = lighting(m,  Sphere(), light, position, eyeV, normalV)
         assertEquals(Color(0.1, 0.1, 0.1), result)
     }
 
@@ -303,7 +303,7 @@ class SpheresTest {
         val normalV = vector(0.0, 0.0, -1.0)
         val light = PointLight(point(0.0, 0.0, -10.0), Color(1.0, 1.0, 1.0))
         val inShadow = true
-        val result = lighting(m, light, position, eyeV, normalV, inShadow)
+        val result = lighting(m, Sphere(), light, position, eyeV, normalV, inShadow)
         assertEquals(Color(0.1, 0.1, 0.1), result)
     }
 }

@@ -1,5 +1,8 @@
 package com.tcmpinheiro.raytracerchallenge.features
 
+import raytracerchallenge.features.Pattern
+import raytracerchallenge.features.StripePattern
+
 data class PointLight(val position: Tuple = point(0.0, 0.0, 0.0), val intensity:Color = Color(1.0, 1.0, 1.0))
 
 abstract class Shape(var transform: Matrix = identityMatrix(),
@@ -73,7 +76,8 @@ data class Material(val color: Color = Color(1.0, 1.0, 1.0),
                     var ambient: Double = 0.1,
                     val diffuse: Double = 0.9,
                     val specular: Double = 0.9,
-                    val shininess: Double = 200.0
+                    val shininess: Double = 200.0,
+                    val pattern: Pattern? = null
 )
 
 
@@ -81,9 +85,14 @@ fun reflect(vector: Tuple, normal: Tuple): Tuple {
     return  vector - normal * 2.0 * dot(vector, normal)
 }
 
-fun lighting(material: Material, light: PointLight, point: Tuple, eyeV: Tuple, normalV: Tuple, inShadow:Boolean = false): Color{
+fun lighting(material: Material, shape:Shape, light: PointLight, point: Tuple, eyeV: Tuple, normalV: Tuple, inShadow:Boolean = false): Color{
+    val color:Color = if (material.pattern != null) {
+        material.pattern.pattern_at_shape(shape, point)
+    } else {
+        material.color
+    }
     //combine the surface color with the light's color/intensity
-    val effectiveColor = material.color * light.intensity
+    val effectiveColor = color * light.intensity
 
     //find the direction to the light source
     val lightv = normalize(light.position - point)

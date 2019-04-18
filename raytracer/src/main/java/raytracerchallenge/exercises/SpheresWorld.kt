@@ -1,6 +1,7 @@
 package com.tcmpinheiro.raytracerchallenge.exercises
 
 import com.tcmpinheiro.raytracerchallenge.features.*
+import raytracerchallenge.features.StripePattern
 import java.io.File
 import kotlin.math.PI
 
@@ -9,25 +10,28 @@ class SpheresWorld {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
+            val pattern = StripePattern(Color(1.0, 0.0, 0.0), Color(0.5, 0.0, 0.0))
 
             val floor = Plane()
             floor.material = Material(
                 color = Color(1.0, 0.9, 0.9),
-                specular = 0.0
+                specular = 0.0,
+                pattern = pattern
             )
 
             val middle = Sphere()
             middle.transform = translation(-0.5, 1.0, 0.5)
-            middle.material = Material(color = Color(0.1, 1.0, 0.5), diffuse = 0.7, specular = 0.3)
+            middle.material = Material(pattern = pattern, color = Color(0.1, 1.0, 0.5), diffuse = 0.7, specular = 0.3)
+            middle.material.pattern?.transform = scaling(0.5, 0.5, 0.5)
 
             val right = Sphere()
             right.transform = translation(1.5, 0.5, -0.5) * scaling(0.5, 0.5, 0.5)
-            right.material = Material(color = Color(0.5, 1.0, 0.1), diffuse = 0.7, specular = 0.3)
+            right.material = Material(pattern = pattern, color = Color(0.5, 1.0, 0.1), diffuse = 0.7, specular = 0.3)
 
 
             val left = Sphere()
             left.transform = translation(-1.5, 0.33, -0.75) * scaling(0.33, 0.33, 0.33)
-            left.material = Material(color = Color(1.0, 0.8, 0.1), diffuse = 0.7, specular = 0.3)
+            left.material = Material(pattern = pattern, color = Color(1.0, 0.8, 0.1), diffuse = 0.7, specular = 0.3)
 
             val world = World(PointLight(point(-10.0, 10.0, -10.0), Color(1.0, 1.0, 1.0)))
             world.objects.addAll(setOf(floor, middle, left, right))
