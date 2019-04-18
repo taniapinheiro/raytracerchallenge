@@ -339,4 +339,41 @@ class WorldTest {
         assert( computations.overPoint.z < -EPSILON/2)
         assert(computations.point.z > computations.overPoint.z)
     }
+
+    /**
+     * Scenario: The reflected color for a nonreflective material
+     * Given w ← default_world()
+     * And r ← ray(point(0, 0, 0), vector(0, 0, 1))
+     * And shape ← the second object in w
+     * And shape.material.ambient ← 1
+     * And i ← intersection(1, shape)
+     * When comps ← prepare_computations(i, r)
+     * And color ← reflected_color(w, comps)
+     * Then color = color(0, 0, 0)
+     */
+    @Test
+    fun testReflectedColorOnNonReflectiveMaterial() {
+        val w = defaultWorld()
+        val r = Ray(point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0))
+        val shape = w.objects.last()
+        shape.material.ambient = 1.0
+        val i = Intersection(1.0, shape)
+        val comps = prepare_computations(i, r)
+        val color = reflected_color(w, comps)
+        assertEquals(Color(0.0, 0.0, 0.0), color)
+    }
+
+    /**
+     * Scenario: The reflected color for a reflective material
+     * Given w ← default_world()
+     * And shape ← plane() with:
+     * | material.reflective | 0.5 |
+     * | transform | translation(0, -1, 0) |
+     * And shape is added to w
+     * And r ← ray(point(0, 0, -3), vector(0, -√2/2, √2/2))
+     * And i ← intersection(√2, shape)
+     * When comps ← prepare_computations(i, r)
+     * And color ← reflected_color(w, comps)
+     * Then color = color(0.19032, 0.2379, 0.14274)
+     */
 }

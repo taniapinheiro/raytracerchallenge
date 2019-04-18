@@ -77,12 +77,17 @@ data class Material(val color: Color = Color(1.0, 1.0, 1.0),
                     val diffuse: Double = 0.9,
                     val specular: Double = 0.9,
                     val shininess: Double = 200.0,
-                    val pattern: Pattern? = null
+                    val pattern: Pattern? = null,
+                    val reflective: Double = 0.0
 )
 
 
 fun reflect(vector: Tuple, normal: Tuple): Tuple {
     return  vector - normal * 2.0 * dot(vector, normal)
+}
+
+fun reflected_color(world: World, comps:Computations):Color {
+    return Color(0.0, 0.0, 0.0)
 }
 
 fun lighting(material: Material, shape:Shape, light: PointLight, point: Tuple, eyeV: Tuple, normalV: Tuple, inShadow:Boolean = false): Color{

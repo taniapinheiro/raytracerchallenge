@@ -2,6 +2,7 @@ package com.tcmpinheiro.raytracerchallenge.features
 
 import junit.framework.Assert.assertEquals
 import org.junit.Test
+import kotlin.math.sqrt
 
 class SpheresTest {
 
@@ -305,5 +306,33 @@ class SpheresTest {
         val inShadow = true
         val result = lighting(m, Sphere(), light, position, eyeV, normalV, inShadow)
         assertEquals(Color(0.1, 0.1, 0.1), result)
+    }
+
+    /**
+     * Scenario: Reflectivity for the default material
+     * Given m ← material()
+     * Then m.reflective = 0.0
+     */
+    @Test
+    fun testMaterialReflectivity() {
+        val m = Material()
+        assertEquals(0.0, m.reflective, delta)
+    }
+
+    /**
+     * Scenario: Precomputing the reflection vector
+     * Given shape ← plane()
+     * And r ← ray(point(0, 1, -1), vector(0, -√2/2, √2/2))
+     * And i ← intersection(√2, shape)
+     * When comps ← prepare_computations(i, r)
+     * Then comps.reflectv = vector(0, √2/2, √2/2)
+     */
+    @Test
+    fun testPreComputeReflectionVector() {
+        val shape = Plane()
+        val r = Ray(point(0.0, 1.0, -1.0), vector(0.0, -sqrt(2.0)/2, sqrt(2.0)/2))
+        val i = Intersection(sqrt(2.0), shape)
+        val comps = prepare_computations(i, r)
+        assertEquals(vector(0.0, sqrt(2.0)/2, sqrt(2.0)/2), comps.reflectv)
     }
 }

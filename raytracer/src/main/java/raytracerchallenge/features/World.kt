@@ -32,6 +32,7 @@ class Computations{
     lateinit var normalv: Tuple
     var inside:Boolean = false
     lateinit var overPoint: Tuple
+    lateinit var reflectv:Tuple
 
 }
 
@@ -52,6 +53,7 @@ fun prepare_computations(intersection: Intersection, ray: Ray): Computations {
         comps.inside = true
         comps.normalv = -comps.normalv
     }
+    comps.reflectv = reflect(ray.direction, comps.normalv)
     return comps
 }
 
